@@ -27,6 +27,7 @@ export class GameEngine {
     this.seededRandom = null;
     this.lastTimestamp = null;
     this.animationFrameId = null;
+    this.ready = false;
   }
 
   /**
@@ -42,12 +43,22 @@ export class GameEngine {
     };
 
     sprite.onerror = () => {
-      this.ctx.fillStyle = '#000';
-      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      this.ctx.fillStyle = '#fff';
-      this.ctx.font = '20px sans-serif';
-      this.ctx.textAlign = 'center';
-      this.ctx.fillText('Failed to load usagi.webp', this.canvas.width / 2, this.canvas.height / 2);
+      // Create a fallback placeholder sprite so the game still works
+      const fallback = document.createElement('canvas');
+      fallback.width = 34;
+      fallback.height = 34;
+      const fctx = fallback.getContext('2d');
+      fctx.fillStyle = '#FFD700';
+      fctx.beginPath();
+      fctx.arc(17, 17, 16, 0, Math.PI * 2);
+      fctx.fill();
+      fctx.fillStyle = '#000';
+      fctx.beginPath();
+      fctx.arc(22, 12, 3, 0, Math.PI * 2);
+      fctx.fill();
+
+      this.player = new Player(fallback, CONFIG.PLAYER_X, CONFIG.CANVAS_HEIGHT / 2);
+      this._setup();
     };
   }
 
@@ -76,6 +87,7 @@ export class GameEngine {
     this.inputHandler.onDifficultyChange(direction => this._handleDifficultyChange(direction));
 
     this.state = GameState.READY;
+    this.ready = true;
     this.render();
   }
 
@@ -143,6 +155,8 @@ export class GameEngine {
    * @param {number} deltaTime - Time elapsed since last frame in seconds
    */
   update(deltaTime) {
+    if (!this.ready) return;
+
     // Always update background
     this.background.update(deltaTime);
 
@@ -195,6 +209,8 @@ export class GameEngine {
    * Draw current frame based on game state.
    */
   render() {
+    if (!this.ready) return;
+
     const ctx = this.ctx;
     const width = this.canvas.width;
     const height = this.canvas.height;

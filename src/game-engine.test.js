@@ -78,6 +78,7 @@ function createInitializedEngine() {
   engine.background = new Background(CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT);
   engine.inputHandler = new InputHandler(canvas, mockDoc);
   engine.inputHandler.onAction(() => engine._handleInput());
+  engine.ready = true;
 
   return { engine, canvas, ctx };
 }
