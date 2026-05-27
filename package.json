@@ -1,0 +1,13 @@
+{
+  "name": "flappy-usagi",
+  "version": "1.0.0",
+  "description": "A browser-based Flappy Bird clone featuring a rabbit character",
+  "type": "module",
+  "scripts": {
+    "test": "vitest --run"
+  },
+  "devDependencies": {
+    "vitest": "^3.1.4",
+    "fast-check": "^4.1.1"
+  }
+}
